@@ -35,6 +35,8 @@ Vagrant.configure("2") do |config|
 
     springapp.vm.provider "virtualbox" do |vb|
       vb.name = "springapp"
+      vb.memory = 4096
+      vb.cpus = 2
     end
 
     springapp.vm.provision "shell", inline: "apt-get update && apt-get install -y openjdk-11-jre"
