@@ -40,6 +40,6 @@ Vagrant.configure("2") do |config|
     end
 
     springapp.vm.provision "shell", inline: "apt-get update && apt-get install -y openjdk-11-jre"
-    springapp.vm.provision "shell", inline: "java -Dspring.profiles.active=mysql -jar /vagrant/springapp/*.jar &"
+    springapp.vm.provision "shell", inline: "java -Dspring.profiles.active=mysql -jar /vagrant/springapp/*.jar"
   end
 end
