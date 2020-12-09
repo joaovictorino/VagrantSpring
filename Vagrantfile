@@ -5,7 +5,9 @@ $script_mysql = <<-SCRIPT
   mysql -e "create database petclinic;" && \
   mysql < /vagrant/mysql/script/user.sql && \
   mysql < /vagrant/mysql/script/schema.sql && \
-  mysql < /vagrant/mysql/script/data.sql
+  mysql < /vagrant/mysql/script/data.sql && \
+  cat /vagrant/mysql/mysqld.cnf > /etc/mysql/mysql.conf.d/mysqld.cnf && \
+  service mysql restart
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -17,21 +19,17 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "mysqlserver" do |mysqlserver|
-    mysqlserver.vm.network "public_network", ip: "192.168.1.22", bridge: "Qualcomm QCA61x4A 802.11ac Wireless Adapter"
+    mysqlserver.vm.network "private_network", ip: "192.168.50.10"
 
     mysqlserver.vm.provider "virtualbox" do |vb|
       vb.name = "mysqlserver"
     end
 
     mysqlserver.vm.provision "shell", inline: $script_mysql
-    mysqlserver.vm.provision "shell",
-         inline: "cat /vagrant/mysql/mysqld.cnf > /etc/mysql/mysql.conf.d/mysqld.cnf"
-    mysqlserver.vm.provision "shell", inline: "service mysql restart"
   end
 
   config.vm.define "springapp" do |springapp|
     springapp.vm.network "forwarded_port", guest: 8080, host: 8080
-    springapp.vm.network "public_network", ip: "192.168.1.25", bridge: "Qualcomm QCA61x4A 802.11ac Wireless Adapter"
 
     springapp.vm.provider "virtualbox" do |vb|
       vb.name = "springapp"
