@@ -1,3 +1,5 @@
+CREATE USER IF NOT EXISTS 'petclinic'@'%' IDENTIFIED BY 'petclinic';
+
 CREATE DATABASE IF NOT EXISTS petclinic;
 
 ALTER DATABASE petclinic

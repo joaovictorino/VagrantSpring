@@ -1,3 +1,2 @@
 *.log
-.vagrant/machines/mysqlserver/virtualbox/*
-.vagrant/machines/springapp/virtualbox/*
+.vagrant

@@ -1,8 +1,6 @@
 $script_mysql = <<-SCRIPT
   apt-get update && \
   apt-get install -y mysql-server-5.7 && \
-  mysql -e "create user 'petclinic'@'%' identified by 'petclinic';" && \
-  mysql -e "create database petclinic;" && \
   mysql < /vagrant/mysql/script/user.sql && \
   mysql < /vagrant/mysql/script/schema.sql && \
   mysql < /vagrant/mysql/script/data.sql && \
@@ -19,7 +17,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "mysqlserver" do |mysqlserver|
-    mysqlserver.vm.network "private_network", ip: "192.168.50.10"
+    mysqlserver.vm.network "private_network", ip: "10.80.4.10"
 
     mysqlserver.vm.provider "virtualbox" do |vb|
       vb.name = "mysqlserver"
@@ -30,6 +28,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "springapp" do |springapp|
     springapp.vm.network "forwarded_port", guest: 8080, host: 8080
+    springapp.vm.network "private_network", ip: "10.80.4.11"
 
     springapp.vm.provider "virtualbox" do |vb|
       vb.name = "springapp"
@@ -37,7 +36,8 @@ Vagrant.configure("2") do |config|
       vb.cpus = 2
     end
 
-    springapp.vm.provision "shell", inline: "apt-get update && apt-get install -y openjdk-11-jre"
-    springapp.vm.provision "shell", inline: "java -Dspring.profiles.active=mysql -jar /vagrant/springapp/*.jar"
+    springapp.vm.provision "shell", inline: "apt-get update && apt-get install -y openjdk-11-jre unzip"
+    springapp.vm.provision "shell", inline: "unzip /vagrant/springapp/springapp.zip -d /srv"
+    springapp.vm.provision "shell", inline: "java -Dspring.profiles.active=mysql -jar /srv/*.jar"
   end
 end
