@@ -38,6 +38,7 @@ Vagrant.configure("2") do |config|
 
     springapp.vm.provision "shell", inline: "apt-get update && apt-get install -y openjdk-11-jre unzip"
     springapp.vm.provision "shell", inline: "unzip /vagrant/springapp/springapp.zip -d /srv"
-    springapp.vm.provision "shell", inline: "java -Dspring.profiles.active=mysql -jar /srv/*.jar"
+    springapp.vm.provision "shell", inline: "nohup java -Dspring.profiles.active=mysql -jar /srv/*.jar &"
+    springapp.vm.provision "shell", inline: "sleep 30"
   end
 end
