@@ -38,7 +38,9 @@ Vagrant.configure("2") do |config|
 
     springapp.vm.provision "shell", inline: "apt-get update && apt-get install -y openjdk-11-jre unzip"
     springapp.vm.provision "shell", inline: "unzip -o /vagrant/springapp/springapp.zip -d /srv"
-    springapp.vm.provision "shell", inline: "nohup java -Dspring.profiles.active=mysql -jar /srv/*.jar &"
-    springapp.vm.provision "shell", inline: "sleep 30"
+    springapp.vm.provision "shell", inline: "mkdir -p /var/log/springapp"
+    springapp.vm.provision "shell", inline: "cp /vagrant/springapp/springapp.service /etc/systemd/system/springapp.service"
+    springapp.vm.provision "shell", inline: "sudo systemctl start springapp.service"
+    springapp.vm.provision "shell", inline: "sudo systemctl enable springapp.service"
   end
 end
